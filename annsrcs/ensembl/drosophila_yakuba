@@ -1,5 +1,5 @@
 software.name=metazoa
-software.version=46
+software.version=51
 url=http://metazoa.ensembl.org/biomart/martservice?
 organism=drosophila yakuba
 databaseName=metazoa

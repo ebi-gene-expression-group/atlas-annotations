@@ -16,7 +16,7 @@ WBPS_REL=$3
 # The template to slot release numbers into
 gxaRefsTemplate=$(dirname ${BASH_SOURCE[0]})/gxa_references.conf
 # The config file that will be used for the actual download of the gtf files
-gxaRefs=~/tmp/gxa_references.conf.`eval date +%Y-%m-%d`.$$
+gxaRefs=/tmp/gxa_references.conf.$( eval date +%Y-%m-%d ).$$
 grep "ftp.ensemblgenomes.org" $gxaRefsTemplate | perl -p -e "s|RELNO|$ENSEMBLGENOMES_REL|g" > $gxaRefs
 grep "wormbase" $gxaRefsTemplate | perl -p -e "s|RELNO|$WBPS_REL|g" >> $gxaRefs
 grep "ftp.ensembl.org" $gxaRefsTemplate | perl -p -e "s|RELNO|$ENSEMBL_REL|g" >> $gxaRefs
@@ -38,3 +38,5 @@ while read -r organism gtf; do
         $(dirname ${BASH_SOURCE[0]})/gtf2gff3.pl $localGtf > $localGff3
     fi
 done < $gxaRefs
+
+rm $gxaRefs
