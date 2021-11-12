@@ -20,7 +20,7 @@ download_file http://ftp.ebi.ac.uk/pub/databases/interpro/$INTERPRO_VERSION/inte
 
 pushd $PROJECT_ROOT
 echo "Parse the file we obtained from Interpro's FTP site"
-export JAVA_OPTS=-Xmx3000M
+export JAVA_OPTS="-Dfile.encoding=utf8 -Xmx3000M"
 amm -s -c "import \$file.src.interpro.Parse; Parse.main(\"$outputDir/interpro.xml\")" > $outputDir/interproIDToTypeTerm.tsv.tmp
 if [ $? -ne 0 ]; then
     echo "Ammonite errored out, exiting..." >&2

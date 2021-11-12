@@ -36,7 +36,8 @@ for line in open(gxa_references_path, 'r'):
         files_listed = []
         ftp.retrlines('NLST', files_listed.append)
         if gtf_file in files_listed:
-            print("File found!")
+            print("URL found:")
+            print(corrected_url)
             sys.exit(0)
         else:
             print("Not found: "+path+'/'+gtf_file)

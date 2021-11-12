@@ -1,5 +1,5 @@
 software.name=plants
-software.version=46
+software.version=51
 url=http://plants.ensembl.org/biomart/martservice?
 organism=oryza indica
 databaseName=plants
