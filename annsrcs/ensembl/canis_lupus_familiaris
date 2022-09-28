@@ -1,7 +1,7 @@
 software.name=ensembl
 software.version=104
 url=http://www.ensembl.org/biomart/martservice?
-organism=canis familiaris
+organism=canis lupus familiaris
 databaseName=ensembl
 datasetName=clfamiliaris_gene_ensembl
 mySqlDbName=canis_lupus_familiaris
