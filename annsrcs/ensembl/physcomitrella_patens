@@ -1,5 +1,5 @@
 software.name=plants
-software.version=51
+software.version=55
 url=http://plants.ensembl.org/biomart/martservice?
 organism=physcomitrium patens
 databaseName=plants
