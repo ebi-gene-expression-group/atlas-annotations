@@ -49,17 +49,13 @@ lazy val alternativeToCanonicalGoTermMapping = {
 val annsrcsPath = PROJECT_ROOT/"annsrcs"/"ensembl"
 val wbpsAnnsrcsPath = PROJECT_ROOT/"annsrcs"/"wbps"
 
-lazy val ANNOTATION_SOURCES: Seq[Path] = Option(System.getenv.get("ANNOTATION_SOURCES"))
-  .map(_.split(":").map(Path(_)).filter(exists).filter(_.isDir))
-match {
+lazy val ANNOTATION_SOURCES: Seq[Path] = Option(System.getenv.get("ANNOTATION_SOURCES")).map(_.split(":").map(Path(_)).filter(exists).filter(_.isDir)) match {
   case Some(paths) => ((paths.map(ls! _).flatten) ++ (List())).toList
   case None => ((ls! wbpsAnnsrcsPath) ++ (ls! annsrcsPath))
 }
 
-def annotationSources: Seq[Path] =
-  ANNOTATION_SOURCES
-  .filter{ case path =>
-    path.isFile && path.segments.last.matches("[a-z]+_[a-z]+")
+def annotationSources: Seq[Path] = ANNOTATION_SOURCES.filter { case path =>
+    path.isFile && path.segments.toList.last.matches("[a-z]+_[a-z]+")
   }
 
 /**
@@ -91,4 +87,4 @@ EXPERIMENT_SOURCES.map(println(_))
 /*
  For each path to experiments, we list all directories that begin with 'E-'
  */
-lazy val ANALYSIS_EXPERIMENTS = EXPERIMENT_SOURCES.map(ls(_)).flatten.filter(_.name startsWith "E-")
+lazy val ANALYSIS_EXPERIMENTS = EXPERIMENT_SOURCES.map(ls(_)).flatten.filter(_.toString startsWith "E-")

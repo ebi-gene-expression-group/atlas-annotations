@@ -1,4 +1,4 @@
-import $ivy.`org.json4s:json4s-native_2.12:3.5.0`
+import $ivy.`org.json4s:json4s-native_2.13:3.6.7`
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
 import $file.^.property.AnnotationSource
@@ -70,7 +70,7 @@ object AtlasSpeciesFactory {
   }
 }
 
-def speciesName(annotationSource: AnnotationSource) = annotationSource.segments.last.capitalize
+def speciesName(annotationSource: AnnotationSource) = annotationSource.segments.toList.last.capitalize
 
 def atlasSpeciesFromAllAnnotationSources = {
   Combinators.combine(
