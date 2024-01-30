@@ -1,5 +1,5 @@
 software.name=parasite
-software.version=15
+software.version=18
 url=http://parasite.wormbase.org/biomart/martservice?
 organism=schistosoma mansoni
 datasetName=wbps_gene
