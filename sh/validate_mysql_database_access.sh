@@ -8,7 +8,7 @@ SOFTWARE_VERSION=$(grep 'software.version' $config_file | awk -F'=' '{ print $2 
 MYSQL_DB_NAME=$(grep 'mySqlDbName' $config_file | awk -F'=' '{ print $2 }')"_core_"$SOFTWARE_VERSION
 
 if [[ $type =~ ensembl ]]; then
-    MYSQL_USER=ensro
+    MYSQL_USER=anonymous
 elif [[ $type =~ wbps ]]; then
     MYSQL_USER=ensro
 else

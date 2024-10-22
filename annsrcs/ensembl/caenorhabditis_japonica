@@ -1,11 +1,11 @@
 software.name=metazoa
-software.version=51
+software.version=60
 url=http://metazoa.ensembl.org/biomart/martservice?
 organism=caenorhabditis japonica
 datasetName=cjaponica_eg_gene
 databaseName=metazoa
 mySqlDbName=caenorhabditis_japonica
-mySqlDbUrl=mysql-ens-sta-3:4160
+mySqlDbUrl=mysql-eg-publicsql.ebi.ac.uk:4157
 types=ensgene,enstranscript,ensprotein
 property.gene_biotype=gene_biotype
 property.description=description
