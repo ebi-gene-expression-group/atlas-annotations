@@ -25,4 +25,3 @@ property.ortholog=acarolinensis_homolog_ensembl_gene,dnovemcinctus_homolog_ensem
 property.refseq=refseq_mrna,refseq_ncrna,refseq_peptide
 property.symbol=external_gene_name
 property.uniprot=uniprotsptrembl,uniprotswissprot
-arrayDesign.A-AFFY-106=affy_cint06a520380f
