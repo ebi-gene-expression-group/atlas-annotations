@@ -19,4 +19,3 @@ property.interproterm=interpro_description
 property.refseq=refseq_peptide
 property.symbol=external_gene_name
 property.uniprot=uniprotsptrembl,uniprotswissprot
-arrayDesign.A-AFFY-131=affy_poplar
