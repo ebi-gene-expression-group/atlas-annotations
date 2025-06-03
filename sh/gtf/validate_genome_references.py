@@ -36,12 +36,12 @@ def check_connection(server, corrected_url, path, file):
         
 
 
-parser = argparse.ArgumentParser(description='Check GTF URLs for organism and release based on gxa_references.conf file.')
+parser = argparse.ArgumentParser(description='Check Genome, Transcriptome and GTF URLs for organism and release based on genome_references.conf file.')
 parser.add_argument('--organism', help='Organism to validate for')
 parser.add_argument('--release', help='release number')
 args = parser.parse_args()
 
-genome_references_path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/gxa_references.conf"
+genome_references_path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/genome_references.conf"
 
 for line in open(genome_references_path, 'r'):
     (organism, tax_id, genus, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
