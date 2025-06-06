@@ -10,6 +10,9 @@ MYSQL_DB_NAME=$(grep 'mySqlDbName' $config_file | awk -F'=' '{ print $2 }')"_cor
 if [[ $type =~ ensembl ]]; then
     MYSQL_USER=ensro
 elif [[ $type =~ wbps ]]; then
+    echo "===========================================================================" >&2
+    echo "WARNING: WBPS references are now fetched from Ensembl Genomes please check." >&2
+    echo "===========================================================================" >&2
     MYSQL_USER=ensro
 else
     echo "ERROR: for $config_file: unknown annotator: $type" >&2
