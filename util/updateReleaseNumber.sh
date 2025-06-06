@@ -26,6 +26,6 @@ else
   update "metazoa" $2 $scriptDir
   update "fungi" $2 $scriptDir
   update "protists" $4 $scriptDir
-  update "parasite" $3 $scriptDir
+  update "parasite" $2 $scriptDir # now fetched from Ensembl Genomes 
   git commit $scriptDir -m "Update release numbers- Ensembl $1 EnsemblGenomes $2 E!Protists $4 Wormbase $3"
 fi
