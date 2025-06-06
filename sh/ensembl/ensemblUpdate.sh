@@ -6,15 +6,15 @@ set -euo pipefail
 
 PROJECT_ROOT=`dirname $0`/../..
 
-if [ $# -lt 3 ]; then
-  echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL NEW_WBPS_REL "
-  echo "e.g. $0 86 34 8"
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL"
+  echo "e.g. $0 86 34"
   exit 1
 fi
 
 NEW_ENSEMBL_REL=$1
 NEW_ENSEMBLGENOMES_REL=$2
-NEW_WBPS_REL=$3
+# NEW_WBPS_REL=$3
 
 export PATH_BIOENTITY_PROPERTIES=${PATH_BIOENTITY_PROPERTIES:-$ATLAS_PROD/bioentity_properties}
 
@@ -31,10 +31,10 @@ echo "Shifting the symlinks to new versions of Ensembl, Ensembl Genomes and WBPS
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/ensembl $PATH_BIOENTITY_PROPERTIES/archive/ensembl_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/reactome $PATH_BIOENTITY_PROPERTIES/archive/reactome_ens${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/go $PATH_BIOENTITY_PROPERTIES/archive/go_ens${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
-symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/wbps $PATH_BIOENTITY_PROPERTIES/archive/wbps_${NEW_WBPS_REL}
+# symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/wbps $PATH_BIOENTITY_PROPERTIES/archive/wbps_${NEW_WBPS_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/array_designs/current $PATH_BIOENTITY_PROPERTIES/archive/array_designs_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}_${NEW_WBPS_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/ensembl $PATH_BIOENTITY_PROPERTIES/archive/annotations_ensembl_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
-symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/wbps $PATH_BIOENTITY_PROPERTIES/archive/annotations_wbps_${NEW_WBPS_REL}
+# symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/wbps $PATH_BIOENTITY_PROPERTIES/archive/annotations_wbps_${NEW_WBPS_REL}
 
 echo "Fetching the latest GO mappings..."
 # This needs to be done because we need to replace any alternative GO ids in Ensembl mapping files with their canonical equivalents
@@ -145,4 +145,4 @@ echo "Fetching the latest Reactome mappings..."
 $PROJECT_ROOT/sh/reactome/fetchAllReactomeMappings.sh $PATH_BIOENTITY_PROPERTIES/reactome/
 
 echo "Downloading gtfs..."
-$PROJECT_ROOT/sh/gtf/download_gtfs.sh "$NEW_ENSEMBL_REL" "$NEW_ENSEMBLGENOMES_REL" "$NEW_WBPS_REL"
+$PROJECT_ROOT/sh/gtf/download_gtfs.sh "$NEW_ENSEMBL_REL" "$NEW_ENSEMBLGENOMES_REL"
