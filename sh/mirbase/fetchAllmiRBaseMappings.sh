@@ -12,6 +12,7 @@ fi
 rm -rf ${outputDir}/mature.fa
 rm -rf ${outputDir}/hairpin.fa
 rm -rf ${outputDir}/miRNA.dat
+# new 2025   https://mirbase.org/download/CURRENT/
 curl -X GET -s -o ${outputDir}/mature.fa.gz "ftp://mirbase.org/pub/mirbase/CURRENT/mature.fa.gz" && gunzip ${outputDir}/mature.fa.gz
 curl -X GET -s -o ${outputDir}/hairpin.fa.gz "ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz" && gunzip ${outputDir}/hairpin.fa.gz
 curl -X GET -s -o ${outputDir}/miRNA.dat.gz "ftp://mirbase.org/pub/mirbase/CURRENT/miRNA.dat.gz" && gunzip ${outputDir}/miRNA.dat.gz
