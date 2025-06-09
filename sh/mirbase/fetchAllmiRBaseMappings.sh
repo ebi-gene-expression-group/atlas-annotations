@@ -14,9 +14,9 @@ rm -rf ${outputDir}/hairpin.fa
 rm -rf ${outputDir}/miRNA.dat
 
 # new 2025   https://mirbase.org/download/CURRENT/
-curl -X GET -s -o ${outputDir}/mature.fa.gz "https://mirbase.org/download/CURRENT/mature.fa.gz" && gunzip ${outputDir}/mature.fa.gz
-curl -X GET -s -o ${outputDir}/hairpin.fa.gz "https://mirbase.org/download/CURRENT/hairpin.fa.gz" && gunzip ${outputDir}/hairpin.fa.gz
-curl -X GET -s -o ${outputDir}/miRNA.dat.gz "https://mirbase.org/download/CURRENT/miRNA.dat.gz" && gunzip ${outputDir}/miRNA.dat.gz
+curl -X GET -s -o ${outputDir}/mature.fa "https://mirbase.org/download/CURRENT/mature.fa"    # && gunzip ${outputDir}/mature.fa.gz
+curl -X GET -s -o ${outputDir}/hairpin.fa "https://mirbase.org/download/CURRENT/hairpin.fa"  # && gunzip ${outputDir}/hairpin.fa.gz
+curl -X GET -s -o ${outputDir}/miRNA.dat "https://mirbase.org/download/CURRENT/miRNA.dat"    # && gunzip ${outputDir}/miRNA.dat.gz
 
 # Bring sequence in line with the rest of the information in mature.fa and hairpin.fa
 perl -pi -e 's|\n| |g' ${outputDir}/mature.fa
