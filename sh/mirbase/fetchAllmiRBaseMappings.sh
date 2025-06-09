@@ -13,10 +13,10 @@ rm -rf ${outputDir}/mature.fa
 rm -rf ${outputDir}/hairpin.fa
 rm -rf ${outputDir}/miRNA.dat
 
-# new 2025   https://mirbase.org/download/CURRENT/
-curl -X GET -s -o ${outputDir}/mature.fa "https://mirbase.org/download/CURRENT/mature.fa"    # && gunzip ${outputDir}/mature.fa.gz
-curl -X GET -s -o ${outputDir}/hairpin.fa "https://mirbase.org/download/CURRENT/hairpin.fa"  # && gunzip ${outputDir}/hairpin.fa.gz
-curl -X GET -s -o ${outputDir}/miRNA.dat "https://mirbase.org/download/CURRENT/miRNA.dat"    # && gunzip ${outputDir}/miRNA.dat.gz
+# we are using release 22 because the latest renders files in html format
+curl -X GET -s -o ${outputDir}/mature.fa "https://mirbase.org/download_version_files/22/mature.fa"    # && gunzip ${outputDir}/mature.fa.gz
+curl -X GET -s -o ${outputDir}/hairpin.fa "https://mirbase.org/download_version_files/22/hairpin.fa"  # && gunzip ${outputDir}/hairpin.fa.gz
+curl -X GET -s -o ${outputDir}/miRNA.dat "https://mirbase.org/download_version_files/22/miRNA.dat"    # && gunzip ${outputDir}/miRNA.dat.gz
 
 # Bring sequence in line with the rest of the information in mature.fa and hairpin.fa
 perl -pi -e 's|\n| |g' ${outputDir}/mature.fa
