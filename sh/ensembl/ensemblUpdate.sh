@@ -100,15 +100,16 @@ find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*ensgene.symbol.tsv' \
 | xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
 > $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat
 
-echo "... Generate WBPS component"
-find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*wbpsgene.symbol.tsv' \
-| xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
-> $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat
+#echo "... Generate WBPS component"
+#find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*wbpsgene.symbol.tsv' \
+#| xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
+#> $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat
 
 echo "Merge miRNAName.dat, geneName.dat and wbpsgeneName.dat into bioentityName.dat"
 cp $PATH_BIOENTITY_PROPERTIES/mirbase/miRNAName.dat $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
 cat $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
-cat $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
+#cat $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
+
 # Apply sanity test
 size=`wc -l $PATH_BIOENTITY_PROPERTIES/bioentityName.dat | awk '{print $1}'`
 if [ "$size" -lt 1000000 ]; then
