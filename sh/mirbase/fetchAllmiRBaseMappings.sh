@@ -59,7 +59,7 @@ for l in $(grep -P '^ID|^AC|\/accession="|\/product="' ${outputDir}/miRNA.dat); 
 done
 
 # Obtain properties of mature and hairpin miRNAs
-for f in mature; do
+for f in mature hairpin; do
    # Get individual values from each line
    for l in $(cat ${outputDir}/${f}.fa); do
        mirbaseSymbol=`echo $l | awk '{print $1}' | awk -F">" '{print $NF}'`
