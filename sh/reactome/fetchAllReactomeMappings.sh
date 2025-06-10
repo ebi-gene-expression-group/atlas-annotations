@@ -16,7 +16,6 @@ function find_properties_file() {
   organism=$1
   property=$2
   cat \
-    <(find -L ${ATLAS_PROD}/bioentity_properties/wbps -name ${1}.wbpsgene.${2}.tsv) \
     <(find -L ${ATLAS_PROD}/bioentity_properties/ensembl -name ${1}.ensgene.${2}.tsv) \
     | head -n1
 }
