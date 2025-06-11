@@ -47,13 +47,13 @@ lazy val alternativeToCanonicalGoTermMapping = {
   * to ANNOTATION_SOURCES.
   */
 val annsrcsPath = PROJECT_ROOT/"annsrcs"/"ensembl"
-val wbpsAnnsrcsPath = PROJECT_ROOT/"annsrcs"/"wbps"
+// val wbpsAnnsrcsPath = PROJECT_ROOT/"annsrcs"/"wbps"
 
 lazy val ANNOTATION_SOURCES: Seq[Path] = Option(System.getenv.get("ANNOTATION_SOURCES"))
   .map(_.split(":").map(Path(_)).filter(exists).filter(_.isDir))
 match {
   case Some(paths) => ((paths.map(ls! _).flatten) ++ (List())).toList
-  case None => ((ls! wbpsAnnsrcsPath) ++ (ls! annsrcsPath))
+//  case None => ((ls! wbpsAnnsrcsPath) ++ (ls! annsrcsPath))
 }
 
 def annotationSources: Seq[Path] =
