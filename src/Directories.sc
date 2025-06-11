@@ -53,7 +53,7 @@ lazy val ANNOTATION_SOURCES: Seq[Path] = Option(System.getenv.get("ANNOTATION_SO
   .map(_.split(":").map(Path(_)).filter(exists).filter(_.isDir))
 match {
   case Some(paths) => ((paths.map(ls! _).flatten) ++ (List())).toList
-//  case None => ((ls! wbpsAnnsrcsPath) ++ (ls! annsrcsPath))
+  case None => ((ls! annsrcsPath))
 }
 
 def annotationSources: Seq[Path] =
