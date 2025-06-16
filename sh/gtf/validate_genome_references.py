@@ -37,7 +37,8 @@ def check_connection(organism, server, corrected_url, path, file):
 
 
 parser = argparse.ArgumentParser(description='Check Genome, Transcriptome and GTF URLs for organism and release based on genome_references.conf file.')
-parser.add_argument('--release', help='release number')
+parser.add_argument('--ensembl', help='Ensembl release number')
+parser.add_argument('--ensemblgenomes', help='Ensemblgenomes release number')
 args = parser.parse_args()
 
 genome_references_path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/genome_references.conf"
@@ -48,8 +49,17 @@ for line in open(genome_references_path, 'r'):
         continue
         
     (organism, tax_id, genus, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
+
+    if genus == "ensembl":
+        release_no = args.ensembl
+    elif genus == "ensemblgenomes":
+        release_no = args.ensemblgenomes
+    else:
+        print("Incorrect genus ", genus, " found, skipping...")
+        fail = True    
+    
     for fa in genome_fa, cdna_fa, gtf_fa:
-        corrected_fa = fa.replace("RELNO", args.release)
+        corrected_fa = fa.replace("RELNO", release_no)
         server, path, file = parse_url(corrected_fa)
         check_connection(organism, server, corrected_fa, path, file)
 
@@ -57,6 +67,5 @@ if fail == True:
     print("Validation ended up in one or more errors.")
     sys.exit(1)
 else:
-    if fail == True:
     print("Validation completed successfully.")
         
