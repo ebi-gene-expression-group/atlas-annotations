@@ -48,14 +48,14 @@ for line in open(genome_references_path, 'r'):
     if not line or line.startswith('#'):
         continue
         
-    (organism, tax_id, genus, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
+    (organism, tax_id, resource, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
 
-    if genus == "ensembl":
+    if resource == "ensembl":
         release_no = args.ensembl
-    elif genus == "ensemblgenomes":
+    elif resource == "ensemblgenomes":
         release_no = args.ensemblgenomes
     else:
-        print("Incorrect genus ", genus, " found, skipping...")
+        print("Incorrect resource ", resource, " found, skipping...")
         fail = True    
     
     for fa in genome_fa, cdna_fa, gtf_fa:
