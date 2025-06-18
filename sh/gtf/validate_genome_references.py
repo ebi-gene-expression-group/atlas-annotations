@@ -16,29 +16,70 @@ def parse_url(url):
 def check_connection(organism, server, corrected_url, path, file):
     ftp = FTP(server)
     ftp.login()
+    
     try:
         ftp.cwd(path)
     except Exception as e:
-        print("Error: For " + organism + " error accessing path " + path + ": " + str(e))
+        if "550 Failed to change directory" in str(e):
+            parent_path = '/'.join(path.rstrip('/').split('/')[:-2])
+
+            if file.endswith((".gtf", ".gtf.gz")):
+                parent_path = '/'.join(path.rstrip('/').split('/')[:-1])
+            
+            print(f"Organism {organism} not found. URL {server}{path} is incorrect.")
+            
+            species_listed = []
+            
+            try:
+                ftp.cwd(parent_path)
+                ftp.retrlines('NLST', species_listed.append)
+
+                print("Possible species name alternatives are:")
+                for file_l in species_listed:
+                    if file_l.startswith(organism.split("_")[0]):
+                        print(f"- {file_l}")
+            except Exception as e2:
+                print(f"Error accessing parent directory: {str(e2)}")
+        else:
+            print(f"Error: For {organism}, error accessing path {path}: {str(e)}")
         fail = True
+        ftp.quit()
+        return fail
+
+    # If cwd succeeded, list files and check presence
     files_listed = []
     ftp.retrlines('NLST', files_listed.append)
+
     if file in files_listed:
         print("URL found:")
         print(corrected_url)
     else:
-        print("Error: For " + organism + " file not found: "+path+'/'+file)
+        print(f"Error: For {organism}, file not found: {path}/{file}")
         print("Possible alternatives are:")
         for file_l in files_listed:
-            if "gtf" in file_l:
-                print("- "+file_l)
+            if file.split(".")[-1] in file_l:
+                print(f"- {file_l}")
         fail = True
-        
+
+    ftp.quit()
 
 
 parser = argparse.ArgumentParser(description='Check Genome, Transcriptome and GTF URLs for organism and release based on genome_references.conf file.')
-parser.add_argument('--ensembl', help='Ensembl release number')
-parser.add_argument('--ensemblgenomes', help='Ensemblgenomes release number')
+
+parser.add_argument(
+    '--ensembl',
+    required=True,
+    type=int,
+    help='Ensembl release number (required, integer)'
+)
+
+parser.add_argument(
+    '--ensemblgenomes',
+    required=True,
+    type=int,
+    help='EnsemblGenomes release number (required, integer)'
+)
+
 args = parser.parse_args()
 
 genome_references_path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/genome_references.conf"
