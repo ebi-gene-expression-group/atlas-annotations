@@ -1,0 +1,26 @@
+name: Validate Genome References
+
+on:
+  pull_request:
+    paths:
+      - 'sh/gtf/genome_references.conf'
+
+jobs:
+  validate-genome-references:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: install FTP dependencies (if needed)
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Run genome reference validation script
+        run: |
+          python sh/gtf/validate_genome_references.py --ensembl 114 --ensemblgenomes 61
