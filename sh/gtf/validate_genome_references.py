@@ -108,7 +108,7 @@ for line in open(genome_references_path, 'r'):
         server, path, file = parse_url(corrected_fa)
         check_connection(organism, server, corrected_fa, path, file)
 
-if fail == True:
+if fail:
     print("Validation ended up in one or more errors.")
     sys.exit(1)
 else:
