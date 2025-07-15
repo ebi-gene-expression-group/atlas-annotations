@@ -27,7 +27,8 @@ def check_connection(organism, server, corrected_url, path, file):
         if "550 Failed to change directory" in str(e):
             parent_path = '/'.join(path.rstrip('/').split('/')[:-2])
 
-            if file.endswith((".gtf", ".gtf.gz")):
+            GTF_EXTENSIONS = (".gtf", ".gtf.gz")
+            if file.lower().endswith(GTF_EXTENSIONS):
                 parent_path = '/'.join(path.rstrip('/').split('/')[:-1])
             
             print(f"Organism {organism} not found. URL {server}{path} is incorrect.")
