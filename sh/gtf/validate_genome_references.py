@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# This script validates FTP URLs from a genome reference config file for Ensembl and EnsemblGenomes.
+# It checks FTP connectivity, directory existence, and file presence for genome, cDNA, and GTF files.
+
 from ftplib import FTP
 import argparse, re, os, sys
 
