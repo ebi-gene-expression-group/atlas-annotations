@@ -14,6 +14,7 @@ def parse_url(url):
     return server, "/"+"/".join(path_tokens[:-1]), path_tokens[-1]
 
 def check_connection(organism, server, corrected_url, path, file):
+    global fail
     ftp = FTP(server)
     ftp.login()
     
