@@ -105,7 +105,7 @@ for line in open(genome_references_path, 'r'):
         fail = True    
     
     for fa in genome_fa, cdna_fa, gtf_fa:
-        corrected_fa = fa.replace("RELNO", release_no)
+        corrected_fa = fa.replace("RELNO", str(release_no))
         server, path, file = parse_url(corrected_fa)
         check_connection(organism, server, corrected_fa, path, file)
 
