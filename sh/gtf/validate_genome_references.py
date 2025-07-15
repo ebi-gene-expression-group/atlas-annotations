@@ -86,7 +86,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-genome_references_path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/genome_references.conf"
+genome_references_path = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "genome_references.conf")
 
 for line in open(genome_references_path, 'r'):
     line = line.strip()  # Remove leading/trailing whitespace
