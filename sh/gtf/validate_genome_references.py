@@ -89,12 +89,13 @@ args = parser.parse_args()
 
 genome_references_path = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "genome_references.conf")
 
-for line in open(genome_references_path, 'r'):
-    line = line.strip()  # Remove leading/trailing whitespace
-    if not line or line.startswith('#'):
-        continue
+with open(genome_references_path, 'r') as file:
+    for line in file:
+        line = line.strip()  # Remove leading/trailing whitespace
+        if not line or line.startswith('#'):
+            continue
         
-    (organism, tax_id, resource, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
+        (organism, tax_id, resource, genome_fa, cdna_fa, gtf_fa, misc) = line.split()
 
     if resource == "ensembl":
         release_no = args.ensembl
