@@ -11,7 +11,10 @@ def parse_url(url):
     """
     Parses a complete ftp URL into server, path and file name.
     """
-    match = re.search("ftp://([a-z\.]*)/(.*)$", url)
+    match = re.match(r"ftp://([^/]+)/(.+)", url)
+    if not match:
+        raise ValueError(f"Invalid FTP URL format: {url}")
+
     server = match.group(1)
     path_tokens = match.group(2).split("/")
     return server, "/"+"/".join(path_tokens[:-1]), path_tokens[-1]
