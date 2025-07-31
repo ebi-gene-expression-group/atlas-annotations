@@ -34,8 +34,7 @@ def connect_with_retry(server, retries=3):
                 
 def check_connection(organism, server, corrected_url, path, file):
     global fail
-    ftp = FTP(server)
-    ftp.login()
+    ftp = connect_with_retry(server)
     
     try:
         ftp.cwd(path)
