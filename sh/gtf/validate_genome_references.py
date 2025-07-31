@@ -3,8 +3,9 @@
 # This script validates FTP URLs from a genome reference config file for Ensembl and EnsemblGenomes.
 # It checks FTP connectivity, directory existence, and file presence for genome, cDNA, and GTF files.
 
-from ftplib import FTP
+from ftplib import FTP, error_temp
 import argparse, re, os, sys
+import time
 
 fail = False
 def parse_url(url):
@@ -19,9 +20,21 @@ def parse_url(url):
     path_tokens = match.group(2).split("/")
     return server, "/"+"/".join(path_tokens[:-1]), path_tokens[-1]
 
+def connect_with_retry(server, retries=3):
+    for i in range(retries):
+        try:
+            ftp = FTP(server)
+            ftp.login()
+            return ftp
+        except error_temp as e:
+            if i < retries - 1:
+                time.sleep(2)
+            else:
+                raise e
+                
 def check_connection(organism, server, corrected_url, path, file):
     global fail
-    ftp = FTP(server)
+    ftp = connect_with_retry(server)
     ftp.login()
     
     try:
