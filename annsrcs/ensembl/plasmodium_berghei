@@ -1,11 +1,11 @@
 software.name=protists
-software.version=51
+software.version=61
 url=http://protists.ensembl.org/biomart/martservice?
 organism=plasmodium bergheia
 databaseName=protists
 datasetName=pberghei_eg_gene
 mySqlDbName=plasmodium_berghei
-mySqlDbUrl=mysql-ens-mirror-3:4275
+mySqlDbUrl=mysql-ens-sta-3:4160
 types=ensgene,enstranscript,ensprotein
 property.gene_biotype=gene_biotype
 property.description=description

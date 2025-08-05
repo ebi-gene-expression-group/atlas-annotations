@@ -30,8 +30,8 @@ for line in open(gxa_references_path, 'r'):
         ftp.login()
         try:
             ftp.cwd(path)
-        except Error:
-            print("Path "+path+" not found!")
+        except Exception as e:
+            print("Error accessing path " + path + ": " + str(e))
             sys.exit(1)
         files_listed = []
         ftp.retrlines('NLST', files_listed.append)

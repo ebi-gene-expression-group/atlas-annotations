@@ -1,11 +1,11 @@
 software.name=ensembl
-software.version=104
+software.version=114
 url=http://www.ensembl.org/biomart/martservice?
 organism=macaca mulatta
 databaseName=ensembl
 datasetName=mmulatta_gene_ensembl
 mySqlDbName=macaca_mulatta
-mySqlDbUrl=mysql-ens-mirror-1:4240
+mySqlDbUrl=mysql-ens-sta-1:4519
 types=ensgene,enstranscript,ensprotein
 property.description=description
 property.embl=embl

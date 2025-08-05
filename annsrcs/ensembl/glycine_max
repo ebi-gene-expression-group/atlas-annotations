@@ -1,11 +1,11 @@
 software.name=plants
-software.version=51
+software.version=61
 url=http://plants.ensembl.org/biomart/martservice?
 organism=glycine max
 databaseName=plants
 datasetName=gmax_eg_gene
 mySqlDbName=glycine_max
-mySqlDbUrl=mysql-ens-mirror-3:4275
+mySqlDbUrl=mysql-ens-sta-3:4160
 types=ensgene,enstranscript,ensprotein
 property.gene_biotype=gene_biotype
 property.description=description

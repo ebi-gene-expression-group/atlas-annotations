@@ -14,9 +14,9 @@ source $PROJECT_ROOT/sh/util_functions.sh
 
 INTERPRO_VERSION=${INTERPRO_VERSION:-"62.0"}
 
-download_file http://ftp.ebi.ac.uk/pub/databases/interpro/$INTERPRO_VERSION/interpro.xml.gz $outputDir/interpro.xml.gz
+download_file http://ftp.ebi.ac.uk/pub/databases/interpro/releases/$INTERPRO_VERSION/interpro.xml.gz $outputDir/interpro.xml.gz
 zcat $outputDir/interpro.xml.gz > $outputDir/interpro.xml && rm $outputDir/interpro.xml.gz
-download_file http://ftp.ebi.ac.uk/pub/databases/interpro/$INTERPRO_VERSION/interpro.dtd $outputDir/interpro.dtd
+download_file http://ftp.ebi.ac.uk/pub/databases/interpro/releases/$INTERPRO_VERSION/interpro.dtd $outputDir/interpro.dtd
 
 pushd $PROJECT_ROOT
 echo "Parse the file we obtained from Interpro's FTP site"

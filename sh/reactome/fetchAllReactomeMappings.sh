@@ -16,7 +16,6 @@ function find_properties_file() {
   organism=$1
   property=$2
   cat \
-    <(find -L ${ATLAS_PROD}/bioentity_properties/wbps -name ${1}.wbpsgene.${2}.tsv) \
     <(find -L ${ATLAS_PROD}/bioentity_properties/ensembl -name ${1}.ensgene.${2}.tsv) \
     | head -n1
 }
@@ -51,11 +50,11 @@ IFS="
 start=`date +%s`
 # Please note that the two files are currently provided manually by Justin Preece from Gramene project
 # we check them in and keep them with source code
-download_file "http://plantreactome.gramene.org/download/current/UniProt2PlantReactome_All_Levels.txt" $outputDir/uniprot2plantReactome_all_levels.txt
+download_file "https://plantreactome.gramene.org/download/current/UniProt2PlantReactome_All_Levels.txt" $outputDir/uniprot2plantReactome_all_levels.txt
 awk -F"\t" '{print $1"\t"$6"\t"$2"\t"$4}' $outputDir/uniprot2plantReactome_all_levels.txt | sort -k 1,1 > $outputDir/aux.UniProt2PlantReactome
 rm $outputDir/uniprot2plantReactome_all_levels.txt
 
-download_file "http://plantreactome.gramene.org/download/current/Ensembl2PlantReactome_All_Levels.txt" $outputDir/ensembl2plantReactome_all_levels.txt
+download_file "https://plantreactome.gramene.org/download/current/Ensembl2PlantReactome_All_Levels.txt" $outputDir/ensembl2plantReactome_all_levels.txt
 awk -F"\t" '{print $1"\t"$6"\t"$2"\t"$4}' $outputDir/ensembl2plantReactome_all_levels.txt | grep -Ev '^ENST' | sort -k 1,1 > $outputDir/aux.Ensembl2PlantReactome
 rm $outputDir/ensembl2plantReactome_all_levels.txt
 

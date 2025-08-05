@@ -12,9 +12,11 @@ fi
 rm -rf ${outputDir}/mature.fa
 rm -rf ${outputDir}/hairpin.fa
 rm -rf ${outputDir}/miRNA.dat
-curl -X GET -s -o ${outputDir}/mature.fa.gz "ftp://mirbase.org/pub/mirbase/CURRENT/mature.fa.gz" && gunzip ${outputDir}/mature.fa.gz
-curl -X GET -s -o ${outputDir}/hairpin.fa.gz "ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz" && gunzip ${outputDir}/hairpin.fa.gz
-curl -X GET -s -o ${outputDir}/miRNA.dat.gz "ftp://mirbase.org/pub/mirbase/CURRENT/miRNA.dat.gz" && gunzip ${outputDir}/miRNA.dat.gz
+
+# we are using release 22 because the latest renders files in html format
+curl -X GET -s -o ${outputDir}/mature.fa "https://mirbase.org/download_version_files/22/mature.fa"    # && gunzip ${outputDir}/mature.fa.gz
+curl -X GET -s -o ${outputDir}/hairpin.fa "https://mirbase.org/download_version_files/22/hairpin.fa"  # && gunzip ${outputDir}/hairpin.fa.gz
+curl -X GET -s -o ${outputDir}/miRNA.dat "https://mirbase.org/download_version_files/22/miRNA.dat"    # && gunzip ${outputDir}/miRNA.dat.gz
 
 # Bring sequence in line with the rest of the information in mature.fa and hairpin.fa
 perl -pi -e 's|\n| |g' ${outputDir}/mature.fa
@@ -57,7 +59,7 @@ for l in $(grep -P '^ID|^AC|\/accession="|\/product="' ${outputDir}/miRNA.dat); 
 done
 
 # Obtain properties of mature and hairpin miRNAs
-for f in mature; do
+for f in mature hairpin; do
    # Get individual values from each line
    for l in $(cat ${outputDir}/${f}.fa); do
        mirbaseSymbol=`echo $l | awk '{print $1}' | awk -F">" '{print $NF}'`

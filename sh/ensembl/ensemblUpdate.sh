@@ -6,15 +6,15 @@ set -euo pipefail
 
 PROJECT_ROOT=`dirname $0`/../..
 
-if [ $# -lt 3 ]; then
-  echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL NEW_WBPS_REL "
-  echo "e.g. $0 86 34 8"
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL"
+  echo "e.g. $0 86 34"
   exit 1
 fi
 
 NEW_ENSEMBL_REL=$1
 NEW_ENSEMBLGENOMES_REL=$2
-NEW_WBPS_REL=$3
+# NEW_WBPS_REL=$3
 
 export PATH_BIOENTITY_PROPERTIES=${PATH_BIOENTITY_PROPERTIES:-$ATLAS_PROD/bioentity_properties}
 
@@ -27,14 +27,14 @@ function symlinkAndArchive() {
     fi
     ln -s $2 $1
 }
-echo "Shifting the symlinks to new versions of Ensembl, Ensembl Genomes and WBPS"
+echo "Shifting the symlinks to new versions of Ensembl and Ensembl Genomes"
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/ensembl $PATH_BIOENTITY_PROPERTIES/archive/ensembl_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/reactome $PATH_BIOENTITY_PROPERTIES/archive/reactome_ens${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/go $PATH_BIOENTITY_PROPERTIES/archive/go_ens${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
-symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/wbps $PATH_BIOENTITY_PROPERTIES/archive/wbps_${NEW_WBPS_REL}
-symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/array_designs/current $PATH_BIOENTITY_PROPERTIES/archive/array_designs_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}_${NEW_WBPS_REL}
+# symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/wbps $PATH_BIOENTITY_PROPERTIES/archive/wbps_${NEW_WBPS_REL}
+symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/array_designs/current $PATH_BIOENTITY_PROPERTIES/archive/array_designs_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/ensembl $PATH_BIOENTITY_PROPERTIES/archive/annotations_ensembl_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
-symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/wbps $PATH_BIOENTITY_PROPERTIES/archive/annotations_wbps_${NEW_WBPS_REL}
+# symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/annotations/wbps $PATH_BIOENTITY_PROPERTIES/archive/annotations_wbps_${NEW_WBPS_REL}
 
 echo "Fetching the latest GO mappings..."
 # This needs to be done because we need to replace any alternative GO ids in Ensembl mapping files with their canonical equivalents
@@ -66,17 +66,17 @@ for species in $(find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*tsv' -type f
 done
 
 # Do the same for WBPS.
-echo "Merge all individual WBPS property files into matrices"
-for species in $(find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*tsv' -type f | xargs -n 1 basename | awk -F"." '{print $1}' | sort -u ); do
-    for bioentity in wbpsgene wbpsprotein wbpstranscript; do
-        mergedFile=$PATH_BIOENTITY_PROPERTIES/annotations/wbps/$species.$bioentity.tsv
-        [[ -s $mergedFile ]] \
-        || $PROJECT_ROOT/sh/ensembl/mergePropertiesIntoMatrix.pl \
-            -indir $PATH_BIOENTITY_PROPERTIES/wbps \
-            -species $species -bioentity $bioentity \
-        > $mergedFile
-    done
-done
+# echo "Merge all individual WBPS property files into matrices"
+# for species in $(find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*tsv' -type f | xargs -n 1 basename | awk -F"." '{print $1}' | sort -u ); do
+#     for bioentity in wbpsgene wbpsprotein wbpstranscript; do
+#         mergedFile=$PATH_BIOENTITY_PROPERTIES/annotations/wbps/$species.$bioentity.tsv
+#         [[ -s $mergedFile ]] \
+#         || $PROJECT_ROOT/sh/ensembl/mergePropertiesIntoMatrix.pl \
+#             -indir $PATH_BIOENTITY_PROPERTIES/wbps \
+#             -species $species -bioentity $bioentity \
+#         > $mergedFile
+#     done
+# done
 
 # Create files that will be loaded into the database.
 echo "Generate $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat file"
@@ -100,15 +100,16 @@ find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*ensgene.symbol.tsv' \
 | xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
 > $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat
 
-echo "... Generate WBPS component"
-find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*wbpsgene.symbol.tsv' \
-| xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
-> $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat
+#echo "... Generate WBPS component"
+#find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*wbpsgene.symbol.tsv' \
+#| xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
+#> $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat
 
 echo "Merge miRNAName.dat, geneName.dat and wbpsgeneName.dat into bioentityName.dat"
 cp $PATH_BIOENTITY_PROPERTIES/mirbase/miRNAName.dat $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
 cat $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
-cat $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
+#cat $PATH_BIOENTITY_PROPERTIES/wbps/wbpsgeneName.dat >> $PATH_BIOENTITY_PROPERTIES/bioentityName.dat
+
 # Apply sanity test
 size=`wc -l $PATH_BIOENTITY_PROPERTIES/bioentityName.dat | awk '{print $1}'`
 if [ "$size" -lt 1000000 ]; then
@@ -145,4 +146,4 @@ echo "Fetching the latest Reactome mappings..."
 $PROJECT_ROOT/sh/reactome/fetchAllReactomeMappings.sh $PATH_BIOENTITY_PROPERTIES/reactome/
 
 echo "Downloading gtfs..."
-$PROJECT_ROOT/sh/gtf/download_gtfs.sh "$NEW_ENSEMBL_REL" "$NEW_ENSEMBLGENOMES_REL" "$NEW_WBPS_REL"
+$PROJECT_ROOT/sh/gtf/download_gtfs.sh "$NEW_ENSEMBL_REL" "$NEW_ENSEMBLGENOMES_REL"

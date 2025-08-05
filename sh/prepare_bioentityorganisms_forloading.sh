@@ -16,9 +16,9 @@ popd
 pushd $outputDir/ensembl
 for f in $(ls *.ensgene.tsv); do echo $f | awk -F"." '{print $1}' >> $aux ; done
 popd
-pushd $outputDir/wbps
-for f in $(ls *.wbpsgene.tsv); do echo $f | awk -F"." '{print $1}' >> $aux ; done
-popd
+#pushd $outputDir/wbps
+#for f in $(ls *.wbpsgene.tsv); do echo $f | awk -F"." '{print $1}' >> $aux ; done
+#popd
 
 i=1
 for organism in $(sort -u $aux); do
