@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
-# Usage: ./format_genome_entry.sh "saccharomyces_cerevisiae 4932 ensemblgenomes ftp://ftp.ensemblgenomes.org/pub/release-RELNO/fungi/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz ftp://ftp.ensemblgenomes.org/pub/release-RELNO/fungi/fasta/saccharomyces_cerevisiae/cdna/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa.gz ftp://ftp.ensemblgenomes.org/pub/release-RELNO/fungi/gtf/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.RELNO.gtf.gz R64-1-1"
+# Usage: ./format_genome_entries.sh input_file.txt ENSEMBL_RELNO ENSEMBLGENOMES_RELNO
+# Example: ./format_genome_entries.sh genome_references.conf 112 60
+#
+# Reads each line, skips comments or empty lines, replaces RELNO with proper release numbers,
+# and outputs YAML for each entry.
 # This script converts atlas-annotations/sh/gtf/genome_references.conf to YAML for nf-core/references piepline 
-# Usage: ./format_genome_entries.sh input_file.txt
-# Reads each line, skips comments or empty lines, and prints YAML blocks.
 
 input_file="$1"
+ensembl_rel="$2"
+ensemblgenomes_rel="$3"
 
-if [[ -z "$input_file" ]]; then
-  echo "Usage: $0 input_file.txt"
+if [[ -z "$input_file" || -z "$ensembl_rel" || -z "$ensemblgenomes_rel" ]]; then
+  echo "Usage: $0 input_file.txt ENSEMBL_RELNO ENSEMBLGENOMES_RELNO"
   exit 1
 fi
 
@@ -24,26 +28,33 @@ while IFS= read -r line; do
   gtf_url=$(echo "$line" | awk '{print $6}')
   genome=$(echo "$line" | awk '{print $7}')
 
-  # Convert lowercase species name to capitalized form (e.g., Saccharomyces_cerevisiae)
-  species_cap=$(echo "$species" | awk -F'_' '{print toupper(substr($1,1,1)) substr($1,2) "_" toupper(substr($2,1,1)) substr($2,2)}')
-
-  # Convert ftp:// to https:// and adjust domain for ensemblgenomes → ensembl
-  fasta_url_https=$(echo "$fasta_url" | sed 's|ftp://ftp.ensemblgenomes.org|https://ftp.ensembl.org|')
-  gtf_url_https=$(echo "$gtf_url" | sed 's|ftp://ftp.ensemblgenomes.org|https://ftp.ensembl.org|')
-
-  # Normalize source name
-  if [[ "$source" == "ensemblgenomes" ]]; then
+  # Determine which release to use based on FTP domain
+  if [[ "$fasta_url" == *"ftp.ensemblgenomes.org"* ]]; then
+    rel="$ensemblgenomes_rel"
     source_name="Ensembl"
+    # convert ensemblgenomes FTP to ensembl HTTPS and replace RELNO
+    fasta_url_mod=$(echo "$fasta_url" | sed "s|ftp://ftp.ensemblgenomes.org|https://ftp.ensembl.org|" | sed "s|RELNO|$rel|g")
+    gtf_url_mod=$(echo "$gtf_url" | sed "s|ftp://ftp.ensemblgenomes.org|https://ftp.ensembl.org|" | sed "s|RELNO|$rel|g")
+  elif [[ "$fasta_url" == *"ftp.ensembl.org"* ]]; then
+    rel="$ensembl_rel"
+    source_name="Ensembl"
+    # convert ftp to https and replace RELNO
+    fasta_url_mod=$(echo "$fasta_url" | sed "s|ftp://|https://|" | sed "s|RELNO|$rel|g")
+    gtf_url_mod=$(echo "$gtf_url" | sed "s|ftp://|https://|" | sed "s|RELNO|$rel|g")
   else
-    source_name=$(echo "$source" | awk '{print toupper(substr($1,1,1)) substr($1,2)}')
+    echo "Warning: Unknown FTP source for $species — skipping."
+    continue
   fi
+
+  # Capitalize species nicely (e.g. saccharomyces_cerevisiae → Saccharomyces_cerevisiae)
+  species_cap=$(echo "$species" | awk -F'_' '{print toupper(substr($1,1,1)) substr($1,2) "_" toupper(substr($2,1,1)) substr($2,2)}')
 
   # Print YAML entry
   cat <<EOF
 - genome: $genome
-  fasta: "$fasta_url_https"
-  gtf: "$gtf_url_https"
-  source_version: "${source_name}_RELNO"
+  fasta: "$fasta_url_mod"
+  gtf: "$gtf_url_mod"
+  source_version: "${source_name}_${rel}"
   species: "$species_cap"
   source: "$source_name"
   # Add these fields to ensure index generation
@@ -52,4 +63,3 @@ while IFS= read -r line; do
 EOF
 
 done < "$input_file"
-
