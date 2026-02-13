@@ -7,8 +7,10 @@ It also stores the config of Atlas properties per species name and which public 
 Version 1.3.0 was used for the November 2019 Atlas (bulk and single cell) releases.
 
 ### Dependencies
-src - only java and [Ammonite](http://www.lihaoyi.com/Ammonite/)
-ensemblUpdate.sh - various bash utilities,mysql, environment variable $ATLAS_PROD (see util/create_test_env.sh to work with this script)
+- Python 3.6+
+- Python packages: `pip install -r requirements.txt`
+- Various bash utilities, mysql
+- Environment variable $ATLAS_PROD (see util/create_test_env.sh to work with this script)
 
 We are in the process of detaching this from our direct filesystem dependencies. As such, the use of $ATLAS_PROD is being replaced
 everywhere to point more specificly to the exact needs of each script.
@@ -21,7 +23,7 @@ the entry point to the annotations update process
 `sh/atlas_species.sh`
 Regenerate the species file based on annotation sources config
 
-`amm -s src/pipeline/retrieve/Retrieve.sc`
+`python3 src/pipeline/retrieve/retrieve.py --validate-only`
 Runs only the BioMart mapping verification for defined organisms (depends on the organisms file inside either
 `annsrc` or the overriding `$ANNOTATION_SOURCES` path). These tests are automated in our internal Jenkins setup
 under the `Ensembl Update` tab.
@@ -38,13 +40,13 @@ Tools that make the Atlas team's work easier, including scripts to automatically
 Executables that the Atlas development team runs to update their annotations
 
 #### ./src
-Scala (Ammonite) source code
+Python source code
 
 |  path  	|   what it does	|
 |:-:	|:-:	|
-|   `./src/pipeline/Start.sc`	|   entry point for fetching annotations	|
-|   `./src/pipeline/is_ready/PropertiesAdequate.sc`	|  check annotation sources vs what we think needs to be in them (e.g. all array designs ) |
+|   `./src/pipeline/start.py`	|   entry point for fetching annotations	|
+|   `./src/pipeline/is_ready/properties_adequate.py`	|  check annotation sources vs what we think needs to be in them (e.g. all array designs ) |
 |   `./src/pipeline/retrieve`	|  fetch annotations - internals 	|
-|  ` ./src/go/PropertiesFromOwlFile.sc`	|   Parse the go.owl for what we need	|
-|   `./src/interpro/Parse.sc	`|   Parse the Interpro provided file	|
-|  ` ./src/atlas/AtlasSpecies.sc`	|   Create the species config for the webapp	|
+|  ` ./src/go/properties_from_owl_file.py`	|   Parse the go.owl for what we need	|
+|   `./src/interpro/parse.py`	|   Parse the Interpro provided file	|
+|  ` ./src/atlas/atlas_species.py`	|   Create the species config for the webapp	|
