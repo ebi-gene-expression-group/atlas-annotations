@@ -88,7 +88,7 @@ def perform_biomart_task(aux: dict, task: tasks.BioMartTask) -> Tuple[Optional[s
     
     # Write results
     elapsed = time.time() - t0
-    message = f"Retrieved data for {task} in {int(elapsed * 1000)} ms"
+    success_message = f"Retrieved data for {task} in {int(elapsed * 1000)} ms"
     
     # Ensure destination directory exists
     task.destination.parent.mkdir(parents=True, exist_ok=True)
@@ -100,10 +100,10 @@ def perform_biomart_task(aux: dict, task: tasks.BioMartTask) -> Tuple[Optional[s
     )
     
     if all_errors:
-        error_msg = f"{message}\n ERRORS: \n" + "\n".join(all_errors)
+        error_msg = f"{success_message}\n ERRORS: \n" + "\n".join(all_errors)
         return (error_msg, None)
     else:
-        return (None, message)
+        return (None, success_message)
 
 
 def validate_destinations_unique(tasks_list: List[tasks.BioMartTask]) -> Tuple[Optional[List[str]], Optional[bool]]:

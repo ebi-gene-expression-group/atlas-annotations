@@ -49,7 +49,7 @@ def parse(property_namespace, property_name, file_location):
     # Build the full tag names
     class_tag = f"{{{namespaces['owl']}}}Class"
     id_tag = f"{{{namespaces['oboInOwl']}}}id"
-    property_tag = f"{{{namespaces.get(property_namespace, '')}}}{ property_name}"
+    property_tag = f"{{{namespaces.get(property_namespace, '')}}}{property_name}"
     
     try:
         for event, elem in ET.iterparse(file_location, events=('start', 'end')):
