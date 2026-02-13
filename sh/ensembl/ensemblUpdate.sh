@@ -46,8 +46,7 @@ $PROJECT_ROOT/sh/interpro/fetchInterproIDToTypeTermMappings.sh $PATH_BIOENTITY_P
 
 pushd $PROJECT_ROOT
 echo "Obtain the mapping files from biomarts based on annotation sources"
-export JAVA_OPTS=-Xmx3000M
-amm -s src/pipeline/Start.sc
+python3 src/pipeline/start.py
 popd
 
 echo "Fetching the synonyms from biomart databases..."

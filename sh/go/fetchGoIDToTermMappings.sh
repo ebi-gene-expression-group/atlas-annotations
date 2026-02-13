@@ -27,18 +27,15 @@ if [ $USE_EXISTING_ONTOLOGY_FILES == "no" ]; then
 fi
 
 echo "Extracting GO id -> term"
-amm -s $PROJECT_ROOT/src/go/PropertiesFromOwlFile.sc terms $outputDir/go.owl \
+python3 $PROJECT_ROOT/src/go/properties_from_owl_file.py terms $outputDir/go.owl \
     > $outputDir/goIDToTerm.tsv
 
 echo "Extracting PO id -> term"
-# Plant ontology now comes in UTF-8
-export JAVA_OPTS="-Dfile.encoding=utf8 -Xmx3000M"
-amm -s $PROJECT_ROOT/src/go/PropertiesFromOwlFile.sc terms $outputDir/po.owl \
+python3 $PROJECT_ROOT/src/go/properties_from_owl_file.py terms $outputDir/po.owl \
     > $outputDir/poIDToTerm.tsv
 
 echo "Extracting GO alternativeId -> id"
-export JAVA_OPTS=-Xmx3000M
-amm -s $PROJECT_ROOT/src/go/PropertiesFromOwlFile.sc alternativeIds $outputDir/go.owl \
+python3 $PROJECT_ROOT/src/go/properties_from_owl_file.py alternativeIds $outputDir/go.owl \
     > $outputDir/go.alternativeID2CanonicalID.tsv
 
 

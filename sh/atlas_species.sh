@@ -3,7 +3,7 @@
 
 target=${1:-`pwd`/species-properties.json}
 
-amm -s `dirname $0`/../src/atlas/AtlasSpecies.sc > $target
+python3 `dirname $0`/../src/atlas/atlas_species.py > $target
 
 if [ -s $target ]
 then

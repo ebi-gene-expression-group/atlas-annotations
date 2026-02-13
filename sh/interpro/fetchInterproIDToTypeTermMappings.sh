@@ -20,10 +20,9 @@ download_file http://ftp.ebi.ac.uk/pub/databases/interpro/releases/$INTERPRO_VER
 
 pushd $PROJECT_ROOT
 echo "Parse the file we obtained from Interpro's FTP site"
-export JAVA_OPTS="-Dfile.encoding=utf8 -Xmx3000M"
-amm -s -c "import \$file.src.interpro.Parse; Parse.main(\"$outputDir/interpro.xml\")" > $outputDir/interproIDToTypeTerm.tsv.tmp
+python3 $PROJECT_ROOT/src/interpro/parse.py "$outputDir/interpro.xml" > $outputDir/interproIDToTypeTerm.tsv.tmp
 if [ $? -ne 0 ]; then
-    echo "Ammonite errored out, exiting..." >&2
+    echo "Python script errored out, exiting..." >&2
     exit 1
 fi
 popd
