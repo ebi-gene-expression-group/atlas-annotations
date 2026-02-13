@@ -114,11 +114,13 @@ def get_experiment_sources() -> List[Path]:
     
     EXPERIMENT_SOURCES should be defined as an environment variable as a list of
     colon (:) delimited paths where one would expect to find experiment directories.
+    
+    Returns empty list if not set.
     """
     experiment_sources_env = os.environ.get("EXPERIMENT_SOURCES")
     
     if not experiment_sources_env:
-        raise RuntimeError("export $EXPERIMENT_SOURCES as an environment variable, where each directory with experiments is separated by a colon :")
+        return []
     
     paths = []
     for path_str in experiment_sources_env.split(':'):
@@ -126,17 +128,15 @@ def get_experiment_sources() -> List[Path]:
         if path.exists() and path.is_dir():
             paths.append(path)
     
-    if not paths:
-        raise RuntimeError("No valid directories found in EXPERIMENT_SOURCES")
-    
     return paths
 
 
 EXPERIMENT_SOURCES = get_experiment_sources()
 
-print("Using the following paths for sources of experiments:")
-for path in EXPERIMENT_SOURCES:
-    print(path)
+if EXPERIMENT_SOURCES:
+    print("Using the following paths for sources of experiments:")
+    for path in EXPERIMENT_SOURCES:
+        print(path)
 
 
 def get_analysis_experiments() -> List[Path]:
