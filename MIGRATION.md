@@ -2,6 +2,10 @@
 
 This document describes the conversion of all Scala/Ammonite scripts to Python and provides guidance for users migrating to the new Python-based version.
 
+## Important Note
+
+The original Scala (`.sc`) files are still present in the repository alongside the new Python (`.py`) files for reference during migration. The shell scripts now call the Python versions. Once you've verified the Python scripts work in your environment, you can safely ignore or remove the `.sc` files.
+
 ## What Changed
 
 All 16 Scala/Ammonite scripts (`.sc` files) have been converted to Python (`.py` files):
