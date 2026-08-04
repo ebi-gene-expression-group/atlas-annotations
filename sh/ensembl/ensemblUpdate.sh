@@ -6,14 +6,15 @@ set -euo pipefail
 
 PROJECT_ROOT=`dirname $0`/../..
 
-if [ $# -lt 2 ]; then
-  echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL"
-  echo "e.g. $0 86 34"
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Usage: $0 NEW_ENSEMBL_REL NEW_ENSEMBLGENOMES_REL [SPECIES]"
+    echo "e.g. $0 86 34 homo_sapiens"
   exit 1
 fi
 
 NEW_ENSEMBL_REL=$1
 NEW_ENSEMBLGENOMES_REL=$2
+TARGET_SPECIES=${3:-}
 # NEW_WBPS_REL=$3
 
 export PATH_BIOENTITY_PROPERTIES=${PATH_BIOENTITY_PROPERTIES:-$ATLAS_PROD/bioentity_properties}
@@ -27,6 +28,21 @@ function symlinkAndArchive() {
     fi
     ln -s $2 $1
 }
+
+function get_species_list() {
+    local base_dir=$1
+    local discovered
+    discovered=$(find -L "$base_dir" -name '*tsv' -type f | xargs -n 1 basename | awk -F"." '{print $1}' | sort -u)
+
+    if [[ -n "$TARGET_SPECIES" ]]; then
+        echo "$discovered" | grep -Fx "$TARGET_SPECIES" >/dev/null \
+        || { echo "ERROR: species '$TARGET_SPECIES' not found under $base_dir"; exit 1; }
+        echo "$TARGET_SPECIES"
+    else
+        echo "$discovered"
+    fi
+}
+
 echo "Shifting the symlinks to new versions of Ensembl and Ensembl Genomes"
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/ensembl $PATH_BIOENTITY_PROPERTIES/archive/ensembl_${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
 symlinkAndArchive $PATH_BIOENTITY_PROPERTIES/reactome $PATH_BIOENTITY_PROPERTIES/archive/reactome_ens${NEW_ENSEMBL_REL}_${NEW_ENSEMBLGENOMES_REL}
@@ -54,7 +70,7 @@ echo "Fetching the synonyms from biomart databases..."
 $PROJECT_ROOT/sh/ensembl/fetchGeneSynonyms.sh
 
 echo "Merge all individual Ensembl property files into matrices"
-for species in $(find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*tsv' -type f | xargs -n 1 basename | awk -F"." '{print $1}' | sort -u ); do
+for species in $(get_species_list "$PATH_BIOENTITY_PROPERTIES/ensembl"); do
     for bioentity in ensgene enstranscript ensprotein; do
         mergedFile=$PATH_BIOENTITY_PROPERTIES/annotations/ensembl/$species.$bioentity.tsv
         [[ -s $mergedFile ]] \
@@ -96,9 +112,15 @@ rm -rf $PATH_BIOENTITY_PROPERTIES/mirbase/miRNAName.dat
 $PROJECT_ROOT/sh/mirbase/prepare_mirbasenames_forloading.sh
 
 echo "... Generate Ensembl component"
-find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*ensgene.symbol.tsv' \
-| xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
-> $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat
+if [[ -n "$TARGET_SPECIES" ]]; then
+    find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name "${TARGET_SPECIES}*ensgene.symbol.tsv" \
+    | xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
+    > $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat
+else
+    find -L $PATH_BIOENTITY_PROPERTIES/ensembl -name '*ensgene.symbol.tsv' \
+    | xargs $PROJECT_ROOT/sh/ensembl/prepare_names_for_loading.sh $PATH_BIOENTITY_PROPERTIES/bioentityOrganism.dat \
+    > $PATH_BIOENTITY_PROPERTIES/ensembl/geneName.dat
+fi
 
 #echo "... Generate WBPS component"
 #find -L $PATH_BIOENTITY_PROPERTIES/wbps -name '*wbpsgene.symbol.tsv' \
